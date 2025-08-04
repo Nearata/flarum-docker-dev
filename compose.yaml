@@ -17,12 +17,13 @@ services:
       - flarum-data:/flarum
       - composer-cache:/composer-cache
       - ./extensions:/flarum/extensions
-      #- ./flarum.config.php:/flarum/config.php
+      - ./flarum.config.php:/flarum/config.php
     restart: unless-stopped
   webserver:
     image: nginx:latest
     ports:
-      - 8080:8080
+      - 8080:8080 # flarum
+      - 8081:8081 # adminer
     networks:
       - internal
     volumes:
@@ -42,6 +43,13 @@ services:
       - internal
     volumes:
       - database-data:/var/lib/mysql:Z
+  dbmanager:
+    image: adminer:fastcgi
+    restart: always
+    ports:
+      - 9000:9000
+    networks:
+      - internal
     
 networks:
   internal:
